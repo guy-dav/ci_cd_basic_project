@@ -4,7 +4,7 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to my CI/CD Calculator API!"}
+    return {"message": "Hello World! This is my automated CD pipeline working!"}
 
 @app.get("/add")
 def add(a: int, b: int):
