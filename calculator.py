@@ -8,4 +8,4 @@ def read_root():
 
 @app.get("/add")
 def add(a: int, b: int):
-    return {"result": a + b}
+    return {a + b}
