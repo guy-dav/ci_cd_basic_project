@@ -46,5 +46,6 @@ jobs:
         application_name: 'python-calculator-app' # השם המדויק שנתת לאפליקציה ב-AWS
         environment_name: 'Python-calculator-app-env' # השם המדויק של הסביבה שנוצרה בתוך האפליקציה ב-AWS
         version_label: 'deploy-${{ github.run_id }}'
-        region: 'eu-central-1' # שנה לאזור שבחרת ב-AWS (למשל eu-central-1 עבור פרנקפורט)
+        region: 'eu-west-1' # שנה לאזור שבחרת ב-AWS (למשל eu-central-1 עבור פרנקפורט)
+        bucket_name: ${{ secrets.AWS_EB_BUCKET_NAME }} # use an existing S3 bucket in the same region; avoids CreateStorageLocation permission errors
         deployment_package: deploy.zip
