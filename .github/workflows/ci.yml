@@ -1,11 +1,11 @@
-name: Python CI
+name: Python CI/CD to AWS
 
 on: [push]
 
 jobs:
-  test-and-run:
+  # 1. חלק ה-CI: הרצת הבדיקות
+  test:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -13,14 +13,38 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.10'
+        python-version: '3.11'
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-
     - name: Run Pytest
       run: |
         pytest
+
+  # 2. חלק ה-CD: פריסה אוטומטית ל-AWS רק אם הטסטים עברו
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test # ג'וב הפריסה יתחיל רק אם ג'וב הטסטים הסתיים בהצלחה!
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # אריזת קבצי הפרויקט לקובץ ZIP (כך AWS מקבל קוד בפייתון)
+    - name: Generate deployment package
+      run: zip -r deploy.zip . -x "*.git*"
+
+    # התחברות ופריסה ל-AWS Elastic Beanstalk
+    - name: Deploy to AWS EB
+      uses: einaregilsson/beanstalk-deploy@v22
+      with:
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        application_name: 'python-calculator-app' # השם המדויק שנתת לאפליקציה ב-AWS
+        environment_name: 'Python-calculator-app-env' # השם המדויק של הסביבה שנוצרה בתוך האפליקציה ב-AWS
+        version_label: 'deploy-${{ github.run_id }}'
+        region: 'eu-central-1' # שנה לאזור שבחרת ב-AWS (למשל eu-central-1 עבור פרנקפורט)
+        deployment_package: deploy.zip

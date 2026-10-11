@@ -1,16 +1,20 @@
 from fastapi import FastAPI
 
-app = FastAPI()
+application  = FastAPI()
 
-@app.get("/")
+@application.get("/")
 def read_root():
     return {"message": "Hello World! This is my automated CD pipeline working!"}
 
-@app.get("/add")
+@application.get("/add")
 def add(a: int, b: int):
     return a + b
 
-@app.get("/multiply")
+@application.get("/multiply")
 def multiply(a: int, b: int):
     return a * b
+
+@application.get("/subtract")
+def subtract(a: int, b: int):
+    return a - b
 

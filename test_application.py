@@ -1,4 +1,4 @@
-from calculator import add
+from application import add,application
 
 def test_add_numbers():
     # בדיקה שהפונקציה מחזירה 5 עבור 2 ו-3
